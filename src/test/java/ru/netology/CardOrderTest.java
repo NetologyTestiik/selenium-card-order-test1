@@ -1,5 +1,6 @@
 package ru.netology;
 
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -7,12 +8,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CardOrderTest {
+class CardOrderTest {
     private WebDriver driver;
 
     @BeforeAll
@@ -21,17 +24,17 @@ public class CardOrderTest {
     }
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @AfterEach
-    void teardown() {
+    void tearDown() {
         if (driver != null) {
             driver.quit();
         }
@@ -41,25 +44,34 @@ public class CardOrderTest {
     void shouldSubmitValidForm() {
         driver.get("http://localhost:9999");
 
-        WebElement nameInput = driver.findElement(By.cssSelector("input[type='text']"));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name] input")));
+
         nameInput.sendKeys("Иван Петров");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button")).click();
 
-        WebElement phoneInput = driver.findElement(By.cssSelector("input[type='tel']"));
-        phoneInput.sendKeys("+79211234567");
+        WebElement successElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=order-success]")));
+        String text = successElement.getText();
+        assertTrue(text.contains("Ваша заявка успешно отправлена"));
+    }
 
-        WebElement agreementCheckbox = driver.findElement(By.cssSelector(".checkbox__box"));
-        agreementCheckbox.click();
+    @Test
+    void shouldShowErrorForEnglishName() {
+        driver.get("http://localhost:9999");
 
-        WebElement submitButton = driver.findElement(By.cssSelector("button[type='button']"));
-        submitButton.click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name] input")));
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        nameInput.sendKeys("Ivan Petrov");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button")).click();
 
-        String pageText = driver.findElement(By.tagName("body")).getText();
-        assertTrue(pageText.contains("успешно") || pageText.contains("отправлена"));
+        // Ждем появления ошибки и проверяем
+        WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name].input_invalid .input__sub")));
+        String errorText = errorElement.getText();
+        assertTrue(errorText.contains("Имя и Фамилия указаны неверно") || errorText.contains("Допустимы только русские буквы"));
     }
 }
