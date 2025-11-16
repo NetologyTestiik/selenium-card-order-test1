@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.netology.FormSubmissionTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-16T10:47:45.131Z" hostname="WIN-IHE3OBVD6V1" time="13.689">
+  <properties/>
+  <testcase name="testFormSubmission()" classname="ru.netology.FormSubmissionTest" time="13.689"/>
+  <system-out><![CDATA[=== STARTING FORM SUBMISSION TEST ===
+Page opened: AQA: Заявка на карту
+Name filled
+Phone filled
+Checkbox clicked
+Screenshot before submission created
+Button clicked
+After 5 seconds sleep
+Current title: AQA: Заявка на карту
+Current URL: http://localhost:9999/
+[data-test-id=order-success] exists: true
+.success exists: false
+.message exists: false
+Success message:   Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.
+Screenshot after submission created
+=== TEST COMPLETED ===
+]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+нояб. 16, 2025 3:47:51 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+WARNING: Unable to find CDP implementation matching 142
+нояб. 16, 2025 3:47:52 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+WARNING: Unable to find version of CDP to use for 142.0.7444.163. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+]]></system-err>
+</testsuite>
