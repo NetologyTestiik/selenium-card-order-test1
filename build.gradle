@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-<<<<<<< HEAD
+
 group 'ru.netology'
 version '1.0-SNAPSHOT'
 
@@ -13,9 +13,7 @@ java {
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
-
-=======
->>>>>>> f340e2ce7df6ce125a09ebf1b560a170d80cb6b7
+f340e2ce7df6ce125a09ebf1b560a170d80cb6b7
 repositories {
     mavenCentral()
 }
@@ -27,10 +25,10 @@ dependencies {
 
 test {
     useJUnitPlatform()
-<<<<<<< HEAD
+
     // свойство chromeoptions.prefs используется для задания настроек браузера в проектах на основе Selenide, выключаем менеджер паролей
     systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', "profile.password_manager_leak_detection=false")
-=======
+
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
 }
 
@@ -41,5 +39,5 @@ java {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
->>>>>>> f340e2ce7df6ce125a09ebf1b560a170d80cb6b7
+ f340e2ce7df6ce125a09ebf1b560a170d80cb6b7
 }

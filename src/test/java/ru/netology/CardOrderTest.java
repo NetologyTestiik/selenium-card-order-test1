@@ -8,8 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CardOrderTest {
@@ -27,6 +25,7 @@ class CardOrderTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999"); // ← ОТКРЫТИЕ СТРАНИЦЫ ЗДЕСЬ
     }
 
     @AfterEach
@@ -38,8 +37,6 @@ class CardOrderTest {
 
     @Test
     void shouldSubmitValidForm() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
@@ -51,8 +48,6 @@ class CardOrderTest {
 
     @Test
     void shouldShowErrorForEnglishName() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Ivan Petrov");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
@@ -64,8 +59,6 @@ class CardOrderTest {
 
     @Test
     void shouldShowErrorForEmptyName() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("button")).click();
@@ -76,8 +69,6 @@ class CardOrderTest {
 
     @Test
     void shouldShowErrorForInvalidPhone() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("89211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
@@ -89,8 +80,6 @@ class CardOrderTest {
 
     @Test
     void shouldShowErrorForEmptyPhone() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("button")).click();
@@ -101,8 +90,6 @@ class CardOrderTest {
 
     @Test
     void shouldShowErrorForUncheckedAgreement() {
-        driver.get("http://localhost:9999");
-
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("button")).click();
