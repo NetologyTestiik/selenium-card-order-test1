@@ -1,6 +1,5 @@
 package ru.netology;
 
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -8,8 +7,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
@@ -30,7 +27,6 @@ class CardOrderTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @AfterEach
@@ -44,16 +40,12 @@ class CardOrderTest {
     void shouldSubmitValidForm() {
         driver.get("http://localhost:9999");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name] input")));
-
-        nameInput.sendKeys("Иван Петров");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("button")).click();
 
-        WebElement successElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=order-success]")));
-        String text = successElement.getText();
+        String text = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText();
         assertTrue(text.contains("Ваша заявка успешно отправлена"));
     }
 
@@ -61,17 +53,61 @@ class CardOrderTest {
     void shouldShowErrorForEnglishName() {
         driver.get("http://localhost:9999");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name] input")));
-
-        nameInput.sendKeys("Ivan Petrov");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Ivan Petrov");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("button")).click();
 
-        // Ждем появления ошибки и проверяем
-        WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id=name].input_invalid .input__sub")));
-        String errorText = errorElement.getText();
+        String errorText = driver.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText();
         assertTrue(errorText.contains("Имя и Фамилия указаны неверно") || errorText.contains("Допустимы только русские буквы"));
+    }
+
+    @Test
+    void shouldShowErrorForEmptyName() {
+        driver.get("http://localhost:9999");
+
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button")).click();
+
+        String errorText = driver.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText();
+        assertTrue(errorText.contains("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void shouldShowErrorForInvalidPhone() {
+        driver.get("http://localhost:9999");
+
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("89211234567");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button")).click();
+
+        String errorText = driver.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText();
+        assertTrue(errorText.contains("Телефон указан неверно"));
+    }
+
+    @Test
+    void shouldShowErrorForEmptyPhone() {
+        driver.get("http://localhost:9999");
+
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button")).click();
+
+        String errorText = driver.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText();
+        assertTrue(errorText.contains("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void shouldShowErrorForUncheckedAgreement() {
+        driver.get("http://localhost:9999");
+
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Петров");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79211234567");
+        driver.findElement(By.cssSelector("button")).click();
+
+        WebElement agreement = driver.findElement(By.cssSelector("[data-test-id=agreement].input_invalid"));
+        assertTrue(agreement.isDisplayed());
     }
 }
