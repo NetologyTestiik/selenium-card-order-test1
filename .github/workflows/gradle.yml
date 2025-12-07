@@ -27,7 +27,10 @@ jobs:
       run: java -jar ./artifacts/app-order.jar &
         
     - name: Wait for SUT to start
-      run: sleep 3
+      run: sleep 15
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
       
     - name: Run tests
       run: ./gradlew test
