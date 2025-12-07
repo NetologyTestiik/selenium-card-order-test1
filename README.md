@@ -1,4 +1,5 @@
-[![Java CI](https://github.com/NetologyTestiik/selenium-card-order-test1/actions/workflows/appveyor.yml/badge.svg)](https://github.com/NetologyTestiik/selenium-card-order-test1/actions)
+[![Java CI with Gradle](https://github.com/NetologyTestiik/selenium-card-order-test1/actions/workflows/gradle.yml/badge.svg)](https://github.com/NetologyTestiik/selenium-card-order-test1/actions/workflows/gradle.yml)
+
  # Selenium Card Order Tests
 Automated tests for debit card order form using Selenium WebDriver.
 ## 🚀 CI Status
